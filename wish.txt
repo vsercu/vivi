@@ -1,0 +1,27 @@
+<wilabt_analyser>
+    <dbconnection>
+        <host>172.16.31.11</host>
+        <user>oml</user>
+        <password>oml</password>
+        <database>WiSHFUL</database>
+        <dbtype>POSTGRES</dbtype>
+    </dbconnection>
+    <general>
+        <prepareview></prepareview>
+    </general>
+    <graphics>
+        <info>test</info>
+        <xaxis>test</xaxis>
+        <yaxis>ddd</yaxis>
+        <yaxis>ddd</yaxis>
+    </graphics>
+    <scatters>
+        <scatter>
+            <name>test</name>
+            <sql>select oml_ts_client, "numTxSuccess"
+from "LocalControlProgram_IEEE802154_MACSTATS"
+order by oml_ts_client asc</sql>
+            <color>#ff0000</color>
+        </scatter>
+    </scatters>
+</wilabt_analyser>

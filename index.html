@@ -1,0 +1,338 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>Vinnies Data Visualiser</title>
+        <meta name="author" content="Vincent Sercu" />
+        <!-- Date: 2013-12-03 -->
+        <script src="./js/lib/jquery-1.10.2.js"></script>
+        <script src="./js/lib/jquery-ui-1.10.3.custom.js"></script>
+        <!-- <script src="./js/lib/highstock.js"></script> -->
+        <!-- <script src="./js/lib/highstock.src-rawgithub.js"></script> -->
+
+        <!-- <script src="http://github.highcharts.com/master/highstock.js"></script> -->
+
+        <script src="./js/lib/highstock-2701.js"></script>
+
+        <script src="./js/lib/exporting.js"></script>
+        <script src="./js/lib/jquery_ext.js"></script>
+        <script src="./js/lib/purl.js"></script>
+        <script src="./js/lib/spectrum.js"></script>
+
+        <link href="./js/lib/codemirror.css" media="screen" rel="stylesheet" type="text/css" />
+        <link href="./js/lib/xq-light.css" media="screen" rel="stylesheet" type="text/css" />
+        <link href="./styles/spectrum.css" media="screen" rel="stylesheet" type="text/css" />
+
+        <script src="./js/lib/codemirror.js"></script>
+        <script src="./js/lib/sql.js"></script>
+        <script src="./js/lib/placeholder.js"></script>
+        <script src="./js/lib/jquery.format.js"></script>
+        <script src="./js/lib/downloadable.js"></script>
+
+        <script src="./js/init.js"></script>
+        <script src="./js/ajax.js"></script>
+        <script src="./js/graph.js"></script>
+        <script src="./js/menu.js"></script>
+        <script src="./js/bindings.js"></script>
+        <script src="./js/functions-htmlgen.js"></script>
+        <script src="./js/helper.js"></script>
+
+        <script src="./js/xmlparse.js"></script>
+
+        <link href="./styles/jquery-ui-1.10.3.custom.css" media="screen" rel="stylesheet" type="text/css" />
+
+        <link href="./styles/general-style.css" media="screen" rel="stylesheet" type="text/css" />
+        <link href="./styles/top-menu.css" media="screen" rel="stylesheet" type="text/css" />
+        <link href="./styles/popup.css" media="screen" rel="stylesheet" type="text/css" />
+
+    </head>
+    <body>
+        <div id="errors-div" class="alert-div" style="width: 40%">
+            <div class="ui-state-error ui-corner-all" style="padding: 5px; padding: 5px; ">
+                <span id="close_errors" style="float:right; cursor: pointer;" class="ui-icon ui-icon-close"></span>
+                <div id="errors"></div>
+            </div>
+        </div>
+
+        <table width="100%" border="0" style='height: 40px; border-bottom: 1px dotted black;'>
+            <tr>
+                <td >
+                <div id="box" style="white-space: nowrap;">
+
+                    <a id="bt_load" href="#" class="bt btleft" style="margin-left: 40px"><img src="images/folder_open.png" width="16px" height="16px" class="btimage"/> SQL <span>&#9660;</span></a>
+                    <a id="bt_params" href="#" class="bt btmiddle"><img src="images/parameters.png" width="16px" height="16px" class="btimage"/> Parameters <span>&#9660;</span></a>
+                    <a id="bt_db" href="#" class="bt btmiddle"><img src="images/database.png" width="16px" height="16px" class="btimage"/> DB <span>&#9660;</span></a>
+                    <a id="bt_options" href="#" class="bt btmiddle"><img src="images/options.png" width="16px" height="16px" class="btimage"/> Options <span>&#9660;</span></a>
+                    <a id="bt_help" href="#" class="bt btright"><img src="images/help.png" width="16px" height="16px" class="btimage"/> Help <span>&#9660;</span></a>
+                    <a id="bt_load_series" href="#" class="bt btleft"  style="margin-left: 10px;" title="Create or refresh the graph using SQL's + Params + DB info"><img src="images/Column-Chart-icon.png" width="16px" height="16px" class="btimage"/> <b>Create Graph</b></a>
+                    <a id="bt_live_data" href="#" class="bt btright" title="Get live data"><img id="live_button_image" src="images/download.png" width="16px" height="16px" class="btimage"/> Live Graph</a>
+
+                    <a id="zoomOut" href="#" class="bt btmiddle-rounded" title="Zoom out once" style="margin-left: 10px;"><img src="images/zoom_out.png" width="16px" height="16px" class="btimage"/> Zoom out</a>
+
+                    <a id="bt_save" href="#" class="bt btmiddle-rounded" style="margin-left: 16px" title="Save db info + queries."><img src="images/save.png" width="16px" height="16px" class="btimage"/> Save Queries</a>
+
+                </div>
+                <div id="menu_load" class="submenu" style="margin-left: 40px; width: 70%; height: 70%;">
+                    <div id="triangle"></div>
+                    <div id="tooltip_menu">
+                        <div style="float:right; margin-top: 5px">
+                            Upload (legacy 'w.iLab.t 1) XML:
+                            <input type="file" id="files" />
+                            <br/>
+                            <output id="list"></output>
+                            <span id='help_querystring_example' style="font-size: x-small; color: grey">You can also put the path in a querystring!</span>
+                            <br/>
+                        </div>
+                        <h3>Series:</h3>
+                        <input id="add_serie" type="submit" value="Add a serie manually" />
+                        <br/>
+                        <a href="#">
+                        <input type="checkbox" id="enable_sortable" />
+                        <label for="enable_sortable">Enable custom sorting</label></a>
+                        <br/>
+                        <div>
+                            <a href='#' id='update_sqls'><span style="float:left" class="ui-icon ui-icon-refresh"></span> Update SQL <small>(useful when using parameters, else, just click create graph instantly)</small>!</a>
+                            <ul id="sortable">
+
+                            </ul>
+                        </div>
+                        <br/>
+
+                    </div>
+                </div>
+                <div id="menu_params" class="submenu" style="margin-left: 100px; width: 40%">
+                    <div id="triangle"></div>
+                    <div id="tooltip_menu">
+                        <h3> Configurable SQL parameters: </h3>
+                        <fieldset id="sqlparams" class="inputs" style="border:none;">
+
+                        </fieldset>
+
+                        <br/>
+                    </div>
+                </div>
+                <div id="menu_db" class="submenu" style="margin-left: 220px;">
+                    <div id="triangle"></div>
+                    <div id="tooltip_menu">
+                        <h3> Enter your database information (toggle live to take effect): </h3>
+                        <fieldset id="dbinfo" class="inputs" style="border:none; ">
+                            <label for="username">Username:</label>
+
+                            <input id="username" type="text" placeholder="Username" value="robot-ro" maxlength="50">
+                            <br/>
+                            <label for="password">Password*:</label>
+                            <input id="password" type="password" placeholder="Password" value="robot-ro" maxlength="50">
+                            <br/>
+                            <span style="color:red; width: 100%">* Warning: password is being transmitted over the network in plain text, don't use with sensitive passwords. Will fix in later version...</span>
+                            <br/>
+
+                            <label for="dbhost">Database host or IP:</label>
+                            <input id="dbhost" type="text" placeholder="Database host" value="10.11.19.100" maxlength="50">
+                            <br/>
+                            <label for="dbname">Database name:</label>
+                            <input id="dbname" type="text" placeholder="Database name" value="robotcontrol" maxlength="50">
+                            <br/>
+                            <span style="width:150px">Database Type:</span>
+                            <input id="dbtype_mysql" type="radio" name="dbtype" style="width: 15px;" checked>
+                            <label for="dbtype_mysql" style="width: 35px;">MySQL</label>
+                            <input id="dbtype_postgres" type="radio" name="dbtype" style="width: 15px;">
+                            <label for="dbtype_postgres" style="width: 45px;">Postgres</label>
+
+                        </fieldset>
+
+                        <br/>
+                        <h3>Sandbox SQL-box (is executed only if you click "Execute Once"</h3>
+                        <textarea id="sandbox_sql" placeholder="TRUNCATE some_table;" ></textarea>
+                        <a href="#" id="execute_sandbox_sql">Execute Once</a>
+
+                        <br/>
+                        <h3>Prepare SQL-box (is executed, per heartbeat, before the Serie-SQL's):</h3>
+                        <textarea id="prepare_sql" placeholder="CREATE VIEW sampleReports as SELECT x,y
+FROM tab1 JOIN tab2 ON col
+ORDER BY x ASC
+LIMIT 100;" ></textarea>
+                        <a href="#" id="execute_prepare_sql">Execute</a>
+                    </div>
+                </div><!--
+                options
+                -->
+                <div id="menu_options" class="submenu" style="margin-left:300px; width: 400px">
+                    <div id="triangle"></div>
+                    <div id="tooltip_menu">
+                        <h3> Chart options </h3>
+                        <a href="#"> <label for="chart_title">Title</label>
+                        <input id="chart_title" type="text" />
+                        </a>
+                        <a href="#"> <label for="chart_x_axis">x-Axis</label>
+                        <input id="chart_x_axis" type="text" />
+                        </a>
+                        <a href="#"> <label for="chart_y_axis">y-Axis</label>
+                        <input id="chart_y_axis" type="text" />
+                        </a>
+                        <br/>
+
+                        <a href="#">
+                        <input id="toggle_datapoints" type="checkbox" />
+                        <label for="toggle_datapoints">Toggle datapoints (expensive)</label> </a>
+
+                        <a href="#">
+                        <input id="toggle_mousetracking" type="checkbox" checked="checked" />
+                        <label for="toggle_mousetracking">Toggle mouse tracking</label> </a>
+
+                        <a href="#">
+                        <input id="nonlinearX" type="checkbox" />
+                        <label for="nonlinearX">Use nonlineair X-axis (connect gaps)</label> </a>
+
+                        <h3> Chart actions </h3>
+                        <input type='submit' id='force_redraw' value='Force chart redraw' />
+
+                        <h3>Chart Type, highly experimental :)</h3>
+                        <input id="charttype_spline" type="radio" name="charttype" style="width: 15px;" checked>
+                        <label for="charttype_spline" style="width: 45px;">spline</label>
+                        <input id="charttype_column" type="radio" name="charttype" style="width: 15px;">
+                        <label for="charttype_column" style="width: 35px;">column</label>
+                        <input id="charttype_areaspline" type="radio" name="charttype" style="width: 15px;">
+                        <label for="charttype_areaspline" style="width: 35px;">areaspline</label>
+                        <br/>
+                        <input id="stack_columns" type="checkbox">
+                        <label for="charttype_column" style="width: 35px;">When charttype is column, stack the bars?</label>
+
+                        <p>
+                            Manual scaling of y-axis <i>(re-create chart!)</i>:
+                        </p>
+                        <label for="min_y_value" style="width: 35px;">min y-value:</label>
+                        <input id="min_y_value" type="number" value="">
+                        <br/>
+                        <label for="max_y_value" style="width: 35px;">max y-value:</label>
+                        <input id="max_y_value" type="number" value="">
+
+                        <br/>
+                    </div>
+                </div>
+                <div id="menu_help" class="submenu" style="margin-left:400px;">
+                    <div id="triangle"></div>
+                    <div id="tooltip_menu" style="width: 70%; overflow-x: hidden; overflow-y:scroll; height: 70%">
+
+                        <img src="images/minion.png" style="float:right; padding: 5px;" title="Author: Vincent.Sercu@intec.ugent.be"/>
+                        <div id="version">
+                            Version: 0.8 | IBCN-iMinds | Heavily depending on the <a href="http://www.highcharts.com" target="_blank" style="padding: 0px; display: inline; text-decoration: none; color: #06C; font-size: 10px; color: #000;">highstock api</a>
+                        </div>
+
+                        <div style="padding: 10px">
+                            <h2>Howto?</h2>
+                            <p>
+                                Well it's quite simple really:
+                                <ol>
+                                    <li>
+                                        Make sure your database information (account info) is filled in under the 'DB' menu. Test with execute!
+                                    </li>
+                                    <li>
+                                        Fill in a few queries (each querie is a chart serie) under 'SQL' menu.
+                                    </li>
+                                    <li>
+                                        Select one as a navigator serie (= the little chart at the bottom, can filter a window)
+                                    </li>
+                                    <li>
+                                        Click 'Create graph' or 'Live graph' to fetch the results!
+                                    </li>
+                                    <li>
+                                        Save your queries!
+                                    </li>
+                                </ol>
+                            </p>
+
+                            <p>
+                                Ok, but, you keep in mind that there are some simple rules:
+                                <ul>
+                                    <li>
+                                        Queries need to select 2 fields: column needs to be an X-value and then an Y-value.
+                                    </li>
+                                    <li style="color:red; font-weight: bold">
+                                        The X-value needs to be the same field across <b>all queries</b>, and sorted in an ascending or decending (faster) order!
+                                    </li>
+                                    <li>
+                                        'Prepare statements' may be heavy (~ seconds execution time), as they are only executed once, but the queries have to be lightweight (&lt; 100ms in execution)!. Creating (temporary) tables in your database with the data of all series in the 'Prepare Statement' and then selecting from that table in your queries is a good strategy. Try to avoid selecting from a view.
+                                    </li>
+                                    <LI>
+                                        Put a LIMIT clause in your prepared statement, maximize your resultset to about (max) 5000 rows. Or make sure your where condition doesn't select too much rows, your browser will crash otherwise.
+                                    </LI>
+                                </ul>
+                            </p>
+                            <p>
+                                Play around with the boxes in options, zoom through clicking and dragging on the chart, and export it by clicking on the topright chart menu.
+                            </p>
+                            <p>
+                                Re-order series by dragging and dropping them in the 'SQL' menu.
+                            </p>
+
+                            <p>
+                                Load a legacy Java Analyser XML-file into the system via the menu.
+                            </p>
+                            <p>
+                                Use the shift key to pan left/right.
+                            </p>
+                        </div>
+                    </div>
+                </div></td>
+
+                <td style="overflow: hidden;">
+                <div style="float: right; height: 50px">
+                    <div style="color: #0066CD; font-size: 12pt; font-weight: bold; margin-right: 12px; float: left; margin-top: 14px; width: 220px;">
+                        Vinnies Data Visualiser
+
+                        <div id="processing">
+                            <img src="./images/progress.gif"> Executing SQL... <span id='processing-sec'></span>
+                        </div>
+                    </div>
+                    <div style="float:right">
+                        <img src="./images/Column-Chart-icon.png" height="32px" width="32px" style="margin-top: 5px;"/>
+                    </div>
+                </div></td>
+            </tr>
+        </table>
+
+        <!-- <div id="processing">
+        <img src="./images/progress.gif"> Executing SQL, please wait... <span id='processing-sec'></span>
+        </div> -->
+
+        <div id="container" style="height:90%; width:95%;position:absolute; padding-left: 2%;">
+
+        </div>
+
+        <div id="popup">
+            <a id="popupClose" href="#">x</a>
+            <img src="" align="left"/><h1 style="padding-top:20px; margin-left:115px;">This is the XML representation of your queries:</h1>
+            <br/>
+            <textarea id="save_xml" readonly="readonly" onclick="this.focus();this.select();" cols="75" rows="20" style="width: 100%; font-size: 9pt"></textarea>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            <p style="position: absolute;
+            width: 97%;
+            margin: 0px;
+            text-align: center;
+            padding: 0px;
+            bottom: 6px;">
+                Click on X (right-top) or out to close.
+                <br/>
+                Finetune the coordinates in your favorite CSV editor at your own risk.
+            </p>
+            <a href='#' id='download_txtbox'>Download...</a>
+        </div>
+        <div id="backgroundPopup"></div>
+    </body>
+</html>
+
