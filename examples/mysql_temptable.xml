@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<wilabt_analyser>
+    <dbConnection>
+        <host>10.11.19.100</host>
+        <port>3306</port>
+        <database>robotcontrol</database>
+        <user>XXXXX</user>
+        <password>YYYYY</password>
+        <dbtype>mysql</dbtype> <!-- optional, mysql is default, can also be postgres -->
+    </dbConnection>
+    <graphics>
+        <info>Dummy data</info>
+        <xAxis>X</xAxis>
+        <yAxis>Val</yAxis>
+    </graphics>
+    <general>
+       <prepareView> <!-- executes one or more queries, in preparation for serie-executing -->
+-- creating temp table, is faster than a view!
+CREATE TEMPORARY TABLE IF NOT EXISTS temporarydb.dbg_tmp AS select * from temporarydb.dbg
+ORDER BY uid DESC LIMIT 500;
+
+        </prepareView>
+    </general>
+    <scatters>
+        <scatter>
+            <name>X</name>
+            <color>0x00ff00</color>
+            <sql>
+		        select xas, xas
+                from temporarydb.dbg_tmp
+
+            </sql>
+            <setnav>true</setnav>
+            <column_x>xas</column_x>
+            <column_y>robotap</column_y>
+        </scatter>
+        <scatter>
+            <name>val</name>
+            <color>0x00ff00</color>
+            <sql>
+		        select xas, val
+                from temporarydb.dbg_tmp
+            </sql>
+            <column_x>xas</column_x>
+            <column_y>sensor0</column_y>
+        </scatter>
+
+    </scatters>
+</wilabt_analyser>

@@ -1,0 +1,143 @@
+<?xml version="1.0"?>
+<wilabt_analyser>
+    <dbConnection>
+        <host>10.11.19.100</host>
+        <port>3306</port>
+        <database>robotcontrol</database>
+        <user>XXXXX</user>
+        <password>YYYYY</password>
+        <dbtype>mysql</dbtype> <!-- optional, mysql is default, can also be postgres -->
+    </dbConnection>
+    <graphics>
+        <info>Analyse Robot ___ROBOTID___</info>
+        <xAxis>Relative time (robotTicks)</xAxis>
+        <yAxis>Value</yAxis>
+    </graphics>
+    <general>
+       <prepareView> <!-- executes one or more queries, in preparation for serie-executing -->
+-- dropping table first
+DROP TABLE IF EXISTS temporarydb.vivi_ex;
+-- creating temp table, is faster than a view!
+CREATE TABLE IF NOT EXISTS temporarydb.vivi_ex AS select *, (rtime - ( unix_timestamp(now()) * 10 ) % 65536) as xas from robotcontrol.robot_updates
+WHERE robotid = ___ROBOTID___ and insert_time > (now() - INTERVAL 10 second)
+ORDER BY xas ASC;
+
+        </prepareView>
+    </general>
+    <scatters>
+        <scatter>
+            <name>AP (id x 10)</name>
+            <color>0x00ff00</color>
+            <sql>
+		        select xas, case connected_ap
+			        when 'robotap1' then 10
+			        when 'robotap2' then 20
+			        when 'robotap3' then 30 end as robotap
+                from temporarydb.vivi_ex
+                where robotid = ___ROBOTID___
+
+            </sql>
+            <column_x>xas</column_x>
+            <column_y>robotap</column_y>
+        </scatter>
+        <scatter>
+            <name>Far Right sensor(0)</name>
+            <color>0x00ff00</color>
+            <sql>
+				select xas,  sensor0
+                from temporarydb.vivi_ex
+                where robotid = ___ROBOTID___
+
+            </sql>
+            <column_x>xas</column_x>
+            <column_y>sensor0</column_y>
+        </scatter>
+
+        <scatter>
+            <name>Mid right sensor(1)</name>
+            <color>0x008800</color>
+            <sql>
+				select xas,  sensor1
+                from temporarydb.vivi_ex
+                where robotid = ___ROBOTID___
+
+            </sql>
+            <column_x>xas</column_x>
+            <column_y>sensor1</column_y>
+        </scatter>
+        <scatter>
+            <name>Mid left sensor(2)</name>
+            <color>0x880000</color>
+            <sql>
+				select xas,  sensor2
+                from temporarydb.vivi_ex
+                where robotid = ___ROBOTID___
+
+            </sql>
+            <column_x>xas</column_x>
+            <column_y>sensor2</column_y>
+        </scatter>
+        <scatter>
+            <name>Far left sensor(3)</name>
+            <color>0xFF0000</color>
+            <sql>
+				select xas,  sensor3
+                from temporarydb.vivi_ex
+                where robotid = ___ROBOTID___
+
+            </sql>
+            <column_x>xas</column_x>
+            <column_y>sensor3</column_y>
+        </scatter>
+        <scatter>
+            <name>leftSpeed</name>
+            <color>0x00F080</color>
+            <sql>
+				select xas,  (speedLeft * 10) as speedLeft
+                from temporarydb.vivi_ex
+                where robotid = ___ROBOTID___
+
+            </sql>
+            <column_x>xas</column_x>
+            <column_y>speedLeft</column_y>
+        </scatter>
+        <scatter>
+            <name>rightSpeed</name>
+            <color>0xF08000</color>
+            <sql>
+				select xas,  (speedRight * 10) as speedRight
+                from temporarydb.vivi_ex
+                where robotid = ___ROBOTID___
+
+            </sql>
+            <column_x>xas</column_x>
+            <column_y>speedRight</column_y>
+        </scatter>
+
+        <scatter>
+            <name>rssiRobotatAP</name>
+            <color>0x0000FF</color>
+            <sql>
+				select xas,  rssiRobotatAP as y
+                from temporarydb.vivi_ex
+                where robotid=___ROBOTID___
+
+            </sql>
+            <column_x>xas</column_x>
+            <column_y>y</column_y>
+        </scatter>
+        <scatter>
+            <name>Robot rssi </name>
+            <color>0x8000F0</color>
+            <sql>
+				select xas,  rssiAPatRobot as y
+                from temporarydb.vivi_ex
+                where robotid=___ROBOTID___
+
+            </sql>
+            <column_x>xas</column_x>
+            <column_y>y</column_y>
+        </scatter>
+
+    </scatters>
+</wilabt_analyser>
