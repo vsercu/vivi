@@ -11,11 +11,9 @@
         <!-- <script src="./js/lib/highstock.js"></script> -->
         <!-- <script src="./js/lib/highstock.src-rawgithub.js"></script> -->
 
-        <!-- <script src="http://github.highcharts.com/master/highstock.js"></script> -->
-
         <script src="./js/lib/highstock-2701.js"></script>
-
         <script src="./js/lib/exporting.js"></script>
+
         <script src="./js/lib/jquery_ext.js"></script>
         <script src="./js/lib/purl.js"></script>
         <script src="./js/lib/spectrum.js"></script>
@@ -105,10 +103,14 @@
                     <div id="triangle"></div>
                     <div id="tooltip_menu">
                         <h3> Configurable SQL parameters: </h3>
+
                         <fieldset id="sqlparams" class="inputs" style="border:none;">
 
                         </fieldset>
-
+                        <p id="no_parameters_defined">
+                            No parameters defined yet.<br/>
+                            <i>Add easily modifiable parameters to your SQLs by adding 3 underscores before and after a parametername: <span style="font-family: courier">___test___</span> and clicking 'Update SQL'</i>
+                        </p>
                         <br/>
                     </div>
                 </div>
@@ -160,7 +162,7 @@ LIMIT 100;" ></textarea>
                 <div id="menu_options" class="submenu" style="margin-left:300px; width: 400px">
                     <div id="triangle"></div>
                     <div id="tooltip_menu">
-                        <h3> Chart options </h3>
+                        <h3> Chart options <i>(re-create graph!)</i></h3>
                         <a href="#"> <label for="chart_title">Title</label>
                         <input id="chart_title" type="text" />
                         </a>
@@ -170,6 +172,9 @@ LIMIT 100;" ></textarea>
                         <a href="#"> <label for="chart_y_axis">y-Axis</label>
                         <input id="chart_y_axis" type="text" />
                         </a>
+
+                        <input type='submit' id='white_background' value='White background!' />
+
                         <br/>
 
                         <a href="#">
@@ -184,7 +189,7 @@ LIMIT 100;" ></textarea>
                         <input id="nonlinearX" type="checkbox" />
                         <label for="nonlinearX">Use nonlineair X-axis (connect gaps)</label> </a>
 
-                        <h3> Chart actions </h3>
+                        <h3> Graph actions </h3>
                         <input type='submit' id='force_redraw' value='Force chart redraw' />
 
                         <h3>Chart Type, highly experimental :)</h3>
@@ -198,15 +203,39 @@ LIMIT 100;" ></textarea>
                         <input id="stack_columns" type="checkbox">
                         <label for="charttype_column" style="width: 35px;">When charttype is column, stack the bars?</label>
 
+                        <h3> Manipulate axis <i>(re-create graph!)</i>: </h3>
                         <p>
-                            Manual scaling of y-axis <i>(re-create chart!)</i>:
+                            Manually scale Y-axis:
                         </p>
                         <label for="min_y_value" style="width: 35px;">min y-value:</label>
                         <input id="min_y_value" type="number" value="">
                         <br/>
                         <label for="max_y_value" style="width: 35px;">max y-value:</label>
                         <input id="max_y_value" type="number" value="">
-
+                        <br/>
+                        <br/>
+                        <a href="#">
+                        <input id="show_x_grid" type="checkbox" />
+                        <label for="show_x_grid">Show X-axis gridlines</label> </a>
+                        <a href="#">
+                        <input id="show_minorX_ticks" type="checkbox" />
+                        <label for="show_minorX_ticks">Show minor X-axis ticks</label> </a>
+                        <a href="#">
+                        <input id="show_minorX_gridlines" type="checkbox" />
+                        <label for="show_minorX_gridlines">Show minor X-axis gridlines</label> </a>
+                        <br/>
+                        <a href="#">
+                        <input id="opposite_y_axis" type="checkbox" />
+                        <label for="opposite_y_axis">Set Y-axis to the right</label> </a>
+                        <a href="#">
+                        <input id="show_y_grid" type="checkbox" checked/>
+                        <label for="show_y_grid">Show Y-axis gridlines</label> </a>
+                        <a href="#">
+                        <input id="show_minorY_ticks" type="checkbox" />
+                        <label for="show_minorY_ticks">Show minor Y-axis ticks</label> </a>
+                        <a href="#">
+                        <input id="show_minorY_gridlines" type="checkbox" />
+                        <label for="show_minorY_gridlines">Show minor Y-axis gridlines</label> </a>
                         <br/>
                     </div>
                 </div>
@@ -305,6 +334,7 @@ LIMIT 100;" ></textarea>
             <img src="" align="left"/><h1 style="padding-top:20px; margin-left:115px;">This is the XML representation of your queries:</h1>
             <br/>
             <textarea id="save_xml" readonly="readonly" onclick="this.focus();this.select();" cols="75" rows="20" style="width: 100%; font-size: 9pt"></textarea>
+
 
 
 

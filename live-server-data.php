@@ -177,7 +177,7 @@ try {
         'msg' => ''
     ), JSON_NUMERIC_CHECK) . ");";
 } catch (Exception $e) {
-	$arr = array('data' => "", 'msg' => $e->getMessage());
+	$arr = array('data' => "", 'msg' => str_replace("\n", "<br/>", $e->getMessage()));
     echo $callback . "(" . json_encode( $arr ) . ")";
 }
 

@@ -105,6 +105,7 @@ function scan_for_sql_params(sqlhash, clear_existing, animate_button) {
     if (clear_existing != undefined) {
         if (clear_existing == 1 || clear_existing == 'empty') {
             $("#sqlparams").empty();
+            $("#no_parameters_defined").show();
         }
         if (clear_existing == 'replace') {
             // save in old_data first
@@ -135,6 +136,7 @@ function scan_for_sql_params(sqlhash, clear_existing, animate_button) {
     if (animate_button != undefined && (animate_button == 1 || animate_button == 'animate') && found) {
         $('#bt_params').removeClass("bt btmiddle");
         $('#bt_params').addClass("breathing_button bt btmiddle");
+        $("#no_parameters_defined").hide();
     }
     return found;
 }

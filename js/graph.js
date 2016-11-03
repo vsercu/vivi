@@ -187,7 +187,7 @@ function create_chart() {
             labels : {
                 format : CHART_OPTS['x_axis_label_format'],
                 style : {
-                    'font-size' : '12px'
+                    //'font-size' : '12px'
                 }
                 // ,
                 // formatter : function() {
@@ -196,7 +196,18 @@ function create_chart() {
 
             },
 
-            lineWidth : 3,
+            lineWidth : 2, // thickness of the axis line itself
+
+            // grid:
+            gridLineWidth: $('#show_x_grid').is(':checked') ? 1 : 0,
+
+            // show minor ticks / grid:
+            minorTickInterval: 'auto',
+            minorTickLength: 10,
+            minorTickWidth: $('#show_minorX_ticks').is(':checked') ? 1 : 0,
+            //minorGridLineColor: '#E0E0E0',
+            minorGridLineWidth: $('#show_minorX_gridlines').is(':checked') ? 1 : 0,
+
             events : {
                 setExtremes : function(event) {
                     min_handle = Math.round(event.min);
@@ -221,9 +232,21 @@ function create_chart() {
         },
         yAxis : {
             id : '__y_axis__',
-            lineWidth : 3,
+            lineWidth : 2, // thickness of the axis line itself
             min : $('#min_y_value').val() == "" ? undefined : parseInt($('#min_y_value').val()),
             max : $('#max_y_value').val() == "" ? undefined : parseInt($('#max_y_value').val()),
+
+            opposite : $('#opposite_y_axis').is(':checked'),
+
+            // grid:
+            gridLineWidth: $('#show_y_grid').is(':checked') ? 1 : 0,
+
+            // show minor ticks / grid:
+            minorTickInterval: 'auto',
+            minorTickLength: 10,
+            minorTickWidth: $('#show_minorY_ticks').is(':checked') ? 1 : 0,
+            //minorGridLineColor: '#E0E0E0',
+            minorGridLineWidth: $('#show_minorY_gridlines').is(':checked') ? 1 : 0,
 
             allowDecimals: true,
             labels : {

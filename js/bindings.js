@@ -33,6 +33,10 @@ function bind_buttons() {
         chart.zoomOut();
     });
 
+    $('#white_background').click(function() {
+        $('#container').css("background-color","white");
+    });
+
     $("#sortable").sortable();
     $("#sortable").disableSelection();
 
