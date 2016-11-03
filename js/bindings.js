@@ -34,7 +34,7 @@ function bind_buttons() {
     });
 
     $('#white_background').click(function() {
-        $('#container').css("background-color","white");
+        $('#container').css("background-color", "white");
     });
 
     $("#sortable").sortable();
@@ -107,8 +107,7 @@ function bind_buttons() {
             CHART_OPTS = CHART_COLUMN_STYLE;
         } else if ($('#charttype_areaspline').is(":checked")) {
             CHART_OPTS = CHART_AREASPLINE_STYLE;
-        } else
-        {
+        } else {
             CHART_OPTS = CHART_SPLINE_STYLE;
         }
         load_series(true, 'no-animation');
@@ -119,6 +118,13 @@ function bind_buttons() {
 
         CHART_OPTS = CHART_COLUMN_STYLE;
         load_series(true, 'no-animation');
+    });
+
+    // Programmatically-defined buttons
+    $("#export_csv").click(function() {
+        var authWindow = window.open('about:blank', '_blank', 'left=20,top=20,width=650,height=500,toolbar=0,resizable=1');
+        $(authWindow.document.body).html('<pre>' + chart.getCSV() + '</pre>');
+        authWindow.document.title = "VIVI:: CSV-export";
     });
 }
 

@@ -97,8 +97,8 @@ function create_chart() {
                 marker : {
                     enabled : false
                 },
-                shadow : false
-
+                shadow : false,
+                includeInCSVExport: false
             },
 
             xAxis : {
